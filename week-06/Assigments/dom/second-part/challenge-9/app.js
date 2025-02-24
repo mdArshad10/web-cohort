@@ -14,8 +14,6 @@ body.addEventListener(
     } else {
       toggleBtn.addEventListener("click", (event) => {
         modalPanel.classList.add(["active"]);
-
-
         const closeBtn = document.querySelector(".close-btn");
         closeBtn.addEventListener("click", (event) => {
           modalPanel.classList.remove(["active"]);
