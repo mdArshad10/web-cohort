@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Table</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="container">
+        <!-- <div class="task-container">
+          <div class="task-container-heading">
+            <h3>Todo</h3>
+            <span class="task-count">3</span>
+          </div>
+          <p class="task-container-description">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
+            loadfkadfkadkflor
+          </p>
+          <div class="task-container-task">
+            <div draggable="true" class="item item-container">
+              <div class="item-container-headers">
+                <p>Task 1</p>
+                <div class="task-item-modification">
+                  <i class="ri-delete-bin-line"></i>
+                  <i class="ri-pencil-line"></i>
+                </div>
+              </div>
+              <p>Go to School</p>
+              <span>Create:<span class="date">04/03/2025 </span></span>
+            </div>
+            <div draggable="true" class="item item-container">
+              <div class="item-container-headers">
+                <p>Task 2</p>
+                <div class="task-item-modification">
+                  <i class="ri-delete-bin-line"></i>
+                  <i class="ri-pencil-line"></i>
+                </div>
+              </div>
+              <p>Go to Gym</p>
+              <span>Create:<span class="date">05/03/2025 </span></span>
+            </div>
+          </div>
+
+         <div class="task-container-modification">
+            <button class="addTaskBtn">
+              Add Item
+              <i class="ri-add-line"></i>
+            </button>
+            <button class="deleteTaskBtn">
+              Delete
+              <i class="ri-delete-bin-2-line"></i>
+            </button>
+          </div>
+        </div> -->
+
+        <!-- process -->
+        <div class="task-container">
+          <div class="task-container-heading">
+            <h3>Process</h3>
+            <span class="task-count">2</span>
+          </div>
+          <p class="task-container-description">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
+            loadfkadfkadkflor
+          </p>
+          <div class="task-container-task">
+            <div draggable="true" class="item item-container">
+              <div class="item-container-headers">
+                <p>Task 3</p>
+                <div class="task-item-modification">
+                  <i class="ri-delete-bin-line"></i>
+                  <i class="ri-pencil-line"></i>
+                </div>
+              </div>
+              <p>writing the Code</p>
+              <span>Create:<span class="date">04/03/2025 </span></span>
+            </div>
+            <div draggable="true" class="item item-container">
+              <div class="item-container-headers">
+                <p>Task 4</p>
+                <div class="task-item-modification">
+                  <i class="ri-delete-bin-line"></i>
+                  <i class="ri-pencil-line"></i>
+                </div>
+              </div>
+              <p>Create the Kandan Table</p>
+              <span>Create:<span class="date">05/03/2025 </span></span>
+            </div>
+          </div>
+
+          <div class="task-container-modification">
+            <button class="addTaskBtn">
+              Add Item
+              <i class="ri-add-line"></i>
+            </button>
+            <button class="deleteTaskBtn">
+              Delete
+              <i class="ri-delete-bin-2-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="task-container-add-btn">
+        <i class="ri-add-fill"></i>
+      </div>
+
+      <!-- forms -->
+      <!-- adding the new todos -->
+      <div class="background-black">
+        <form id="todo-form">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe rem
+            amet totam, debitis nemo in odio, odit nobis iure
+          </p>
+          <div>
+            <label for="todo-title">Title</label>
+            <input
+              type="text"
+              name=""
+              id="todo-title"
+              placeholder="eg. Todo"
+              required
+            />
+          </div>
+          <div>
+            <label for="todo-description">Description</label>
+            <input
+              type="text"
+              name="todo-description"
+              id="todo-description"
+              placeholder="eg. For Personal"
+              required
+            />
+          </div>
+          <button type="submit" id="todo-form-submit">Create Tab</button>
+          <button type="button" class="close-btn">Close</button>
+        </form>
+      </div>
+
+      <!-- Adding the new item task -->
+      <!-- <div class="background-black"> -->
+      <!-- <form id="item-add-form">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe rem amet totam, debitis nemo in odio, odit nobis iure</p>
+          <div>
+            <label>Task</label>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="eg. Add new Item"
+              required
+            />
+          </div>
+          <button type="submit">Add Task</button>
+        </form> -->
+      <!-- </div> -->
+
+      <!-- Edit the task -->
+      <!-- <div class="background-black">
+        <form action="">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos tempora
+            totam beatae quidem reprehenderit nemo
+          </p>
+          <div>
+            <label for="">Edit Task</label>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="eg. Edit the task"
+              required
+            />
+          </div>
+          <button>Edit Task</button>
+        </form>
+      </div> -->
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

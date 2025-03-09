@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Background Color</title>
+  </head>
+  <body>
+    <div id="wrapper">
+      <form>
+        <label for="color-select">Choose a Color:</label>
+
+        <select name="colors" id="color-select">
+          <option value="">--Please choose an option--</option>
+          <option value="red">Red</option>
+          <option value="yellow">Yellow</option>
+          <option value="blue">Blue</option>
+          <option value="green">Green</option>
+        </select>
+
+        <button type="submit">Create</button>
+      </form>
+
+      <div
+        class="btns"
+        style="display: flex; flex-direction: column; gap: 1rem; width: fit-content;"
+      ></div>
+
+      <script>
+        const form = document.querySelector("form");
+        const btns = document.querySelector(".btns");
+        function changeTheBackground() {
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const optionSelector = document.querySelector("#color-select");
+            const createBtn = document.createElement("button");
+            createBtn.innerText = optionSelector.value;
+            btns.prepend(createBtn);
+            createBtn.addEventListener("click", () => {
+              document.body.style.backgroundColor = createBtn.innerText;
+            });
+          });
+        }
+        changeTheBackground();
+      </script>
+
+      <!-- <script src="./script.js"></script> -->
+    </div>
+  </body>
+</html>
