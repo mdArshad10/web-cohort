@@ -11,8 +11,6 @@ const transporter = nodemailer.createTransport({
 });
 
 // TODO: create a function for both type of mail
-// 1. verification mail
-// 2. forget password
 async function mailSender(to, token) {
   const verificationURL = `${process.env.BASIC_URL}/api/v1/users/verify/${token}`;
   const info = await transporter.sendMail({
