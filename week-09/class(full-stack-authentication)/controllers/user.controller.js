@@ -106,4 +106,29 @@ const login = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { register, login };
+// @DESC: verify the user
+// @METHOD: [GET]  /api/v1/verify/:token
+// @ACCESS: public
+const verifyUser = AsyncHandler(async (req, res, next) => {
+  const { token } = req.params;
+  const user = req.user;
+
+  const compareVerificationToken =
+    user.verificationToken.toString() === token.toString();
+  console.log(compareVerificationToken);
+
+  if (!compareVerificationToken) {
+    return res.status(400).json({
+      message: "invalid token send in mail",
+    });
+  }
+
+  user.isVerified = true;
+  user.verificationToken = null;
+  await user.save();
+  res.status(200).json({
+    message: "user is verified",
+  });
+});
+
+export { register, login, verifyUser };
