@@ -10,6 +10,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// TODO: create a function for both type of mail
+// 1. verification mail
+// 2. forget password
 async function mailSender(to, token) {
   const verificationURL = `${process.env.BASIC_URL}/api/v1/users/verify/${token}`;
   const info = await transporter.sendMail({
@@ -19,8 +22,19 @@ async function mailSender(to, token) {
     text: `This is the verification mail. link :${verificationURL} `, // plain text body
     html: `<p>This is the verification mail <a href =${verificationURL} > verify </a></p>`, // html body
   });
-
   return info.messageId;
 }
 
-export { mailSender };
+async function forgetPasswordSender(to, token) {
+  const verificationURL = `${process.env.BASIC_URL}/api/v1/users/password/${token}`;
+  const info = await transporter.sendMail({
+    from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
+    to, // list of receivers
+    subject: "Reset Password Mail", // Subject line
+    text: `This is the mail for test the password. link :${verificationURL} `, // plain text body
+    html: `<p>This is the forget's password mail <a href =${verificationURL} > Forget Password </a></p>`, // html body
+  });
+  return info.messageId;
+}
+
+export { mailSender, forgetPasswordSender };
