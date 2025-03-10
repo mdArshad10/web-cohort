@@ -108,7 +108,7 @@ const login = AsyncHandler(async (req, res, next) => {
 
 // @DESC: verify the user
 // @METHOD: [GET]  /api/v1/verify/:token
-// @ACCESS: public
+// @ACCESS: private
 const verifyUser = AsyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const user = req.user;
@@ -131,4 +131,39 @@ const verifyUser = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { register, login, verifyUser };
+// @DESC: update the password
+// @METHOD: [PUT]  /api/v1/password
+// @ACCESS: private
+const updatePassword = AsyncHandler(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = req.user;
+
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({
+      message: "fill all the field",
+    });
+  }
+
+  const existingUser = await User.findById(user._id);
+
+  const isComparePassword = await bcrypt.compare(
+    oldPassword,
+    existingUser.password
+  );
+  if (!isComparePassword) {
+    return res.status(400).json({
+      message: "invalid email or password",
+    });
+  }
+
+  existingUser.password = newPassword;
+  await existingUser.save();
+
+
+  res.status(200).json({
+    message: "Password updated Successfully",
+    success: true,
+  });
+});
+
+export { register, login, verifyUser, updatePassword };
