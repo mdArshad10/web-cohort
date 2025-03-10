@@ -4,7 +4,18 @@ import { AsyncHandler } from "../middlewares/asyncHandler.js";
 import crypto from "crypto";
 import { mailSender } from "../utils/sendMail.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
+const cookieOption = {
+  httpOnly: true,
+  sameSite: true,
+  secure: true,
+  expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+};
+
+// @DESC: Register the user
+// @METHOD: [POST]  /api/v1/register
+// @ACCESS: public
 const register = AsyncHandler(async (req, res, next) => {
   const { email, username, password } = req.body;
 
@@ -51,4 +62,48 @@ const register = AsyncHandler(async (req, res, next) => {
   });
 });
 
-export { register };
+// @DESC: login the user
+// @METHOD: [POST]  /api/v1/login
+// @ACCESS: public
+const login = AsyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "all field is required",
+    });
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({
+      message: "invalid email or password",
+    });
+  }
+
+  const isComparePassword = await bcrypt.compare(password, user.password);
+
+  if (!isComparePassword) {
+    return res.status(400).json({
+      message: "invalid email or password",
+    });
+  }
+
+  const accessToken = jwt.sign(
+    { id: user._id },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "15d",
+    }
+  );
+
+  const { password: userPassword, ...existingUser } = user._doc;
+
+  res.cookie("access_token", accessToken, cookieOption).status(200).json({
+    message: "login Successfully",
+    success: true,
+    user: existingUser,
+  });
+});
+
+export { register, login };
