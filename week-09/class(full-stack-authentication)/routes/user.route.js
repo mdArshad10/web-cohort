@@ -6,6 +6,7 @@ import {
   resetPassword,
   updatePassword,
   verifyUser,
+  logout,
 } from "../controllers/user.controller.js";
 import { authUser } from "../middlewares/auth.js";
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/logout", authUser, login);
 router.put("/verify/:token", authUser, verifyUser);
 router.put("/password", authUser, updatePassword);
 router.put("/password/:token", resetPassword);

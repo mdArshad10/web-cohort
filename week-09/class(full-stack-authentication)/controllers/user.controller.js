@@ -111,6 +111,16 @@ const login = AsyncHandler(async (req, res, next) => {
   });
 });
 
+// @DESC: logout the user
+// @METHOD: [POST]  /api/v1/logout
+// @ACCESS: private
+const logout = AsyncHandler(async (req, res, next) => {
+  res.cookie("access_token", "").json({
+    message: "logout the successfully",
+    success: true,
+  });
+});
+
 // @DESC: verify the user
 // @METHOD: [GET]  /api/v1/verify/:token
 // @ACCESS: private
@@ -209,6 +219,12 @@ const resetPassword = AsyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
+  if (!token) {
+    return res.status(400).json({
+      message: "token is not present",
+    });
+  }
+
   if (!newPassword) {
     return res.status(400).json({
       message: "fill the password",
@@ -250,4 +266,5 @@ export {
   updatePassword,
   forgetPassword,
   resetPassword,
+  logout,
 };
