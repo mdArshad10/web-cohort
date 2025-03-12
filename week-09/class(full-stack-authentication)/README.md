@@ -4,10 +4,10 @@
 It is the full-Stack Project (Authentication) with is build in web cohort. 
 
 
-
 ## Tech Stack
 
 **Server:** Node.js, Express.js, cors, bcryptjs, jsonwebtoken, cookie-parser, dotenv, nodemailer.
+
 
 **Database:** Mongodb.
 
@@ -16,7 +16,7 @@ It is the full-Stack Project (Authentication) with is build in web cohort.
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your .env file.
 
 In .env file you adds the following variables
 

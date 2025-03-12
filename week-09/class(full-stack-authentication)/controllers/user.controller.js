@@ -26,7 +26,6 @@ const register = AsyncHandler(async (req, res, next) => {
   const { email, username, password } = req.body;
 
   if (!email || !username || !password) {
-    //  TODO: response is send in json formate
     return next(new ErrorHandler("all filed is not present", 404));
   }
 

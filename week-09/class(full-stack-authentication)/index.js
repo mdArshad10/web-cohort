@@ -7,6 +7,7 @@ import { errorMiddlewares } from "./middlewares/errors.js";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import { apiLimiter } from "./middlewares/rate-limiter.js";
 
 dotenv.config({
   path: "./.env",
@@ -27,6 +28,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cookieParser());
+app.use(apiLimiter)
+app.set("trust proxy", 1);
+
+// database connection health check 
+app.get("/healthcheck", (req, res) => {
+  res.status(200).json({
+    status: "Ok",
+    message: "Server is running",
+    uptime: process.uptime(),
+    timestamp: new Date(),
+  });
+});
+
 
 app.use("/api/v1/users", userRoutes);
 
