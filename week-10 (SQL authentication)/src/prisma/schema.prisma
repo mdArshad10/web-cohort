@@ -22,7 +22,7 @@ model user{
   password String
   role String @default("user")
   isVerify Boolean @default(false)
-  verifyToken String?
+  verifyToken String? @unique
   restPasswordToken String?
   restPasswordTokenExpire DateTime?
   createdAt DateTime @default(now())

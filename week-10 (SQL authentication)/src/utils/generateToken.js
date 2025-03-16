@@ -12,8 +12,8 @@ const decodeToken = (token) => {
   return jwt.decode(token, SECRET_TOKEN);
 };
 
-const generateRefreshToken = () => {
-  return crypto.randomBytes(16).toString("hex");
+const generateRefreshToken = async () => {
+  return await crypto.randomBytes(16).toString("hex");
 };
 
 export { generateToken, decodeToken, generateRefreshToken };

@@ -6,7 +6,8 @@ import {
   hashPassword,
   comparePassword,
 } from "../utils/hashOrComparePassword.js";
-import { generateToken } from "../utils/generateToken.js";
+import { generateToken, generateRefreshToken } from "../utils/generateToken.js";
+import { sendMailForVerify } from "../utils/sendMail.js";
 
 const prisma = new PrismaClient();
 
@@ -33,15 +34,20 @@ const register = AsyncHandler(async (req, res, next) => {
     throw new ApiError(400, "user already exist");
   }
   const hashedPassword = await hashPassword(password);
+  const verifyToken = await generateRefreshToken();
 
   const user = await prisma.user.create({
     data: {
       email,
       username,
       password: hashedPassword,
+      verifyToken,
     },
   });
-  console.log(user);
+  const messageId = await sendMailForVerify(email, verifyToken);
+  if (!messageId) {
+    throw new ApiError(400, "something wrong in sending mail");
+  }
 
   res.status(200).json(new ApiResponse(201, user, "user created successfully"));
 });
@@ -105,6 +111,31 @@ const getProfile = AsyncHandler(async (req, res, next) => {
   res.status(200).json(new ApiResponse(200, user, "get user"));
 });
 
+// @DESC: Verify the user
+// @METHOD: [GET]      /api/v1/users/verify/:token
+// @ACCESS: private
+const VerifyUser = AsyncHandler(async (req, res, next) => {
+  const { token } = req.params;
+
+  if (!token) {
+    throw new ApiError(400, "fill the field first");
+  }
+  const user = await prisma.user.update({
+    where: {
+      verifyToken: token,
+    },
+    data: {
+      isVerify: true,
+      verifyToken: null,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(400, "user is not update");
+  }
+  res.status(200).json(new ApiResponse(200, user, "user verify the user"));
+});
+
 // @DESC: Reset password
 // @METHOD: [GET]      /api/v1/users/:token
 // @ACCESS: private
@@ -120,4 +151,12 @@ const forgotPassword = AsyncHandler(async (req, res, next) => {
   const { email } = req.body;
 });
 
-export { register, login, logout, getProfile, resetPassword, forgotPassword };
+export {
+  register,
+  login,
+  logout,
+  getProfile,
+  resetPassword,
+  forgotPassword,
+  VerifyUser,
+};
