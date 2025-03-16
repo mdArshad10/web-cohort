@@ -23,7 +23,7 @@ model user{
   role String @default("user")
   isVerify Boolean @default(false)
   verifyToken String? @unique
-  restPasswordToken String?
+  restPasswordToken String? @unique
   restPasswordTokenExpire DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

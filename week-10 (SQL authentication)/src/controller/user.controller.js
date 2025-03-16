@@ -7,7 +7,7 @@ import {
   comparePassword,
 } from "../utils/hashOrComparePassword.js";
 import { generateToken, generateRefreshToken } from "../utils/generateToken.js";
-import { sendMailForVerify } from "../utils/sendMail.js";
+import { sendMailForVerify, sendMailForForget } from "../utils/sendMail.js";
 
 const prisma = new PrismaClient();
 
@@ -113,7 +113,7 @@ const getProfile = AsyncHandler(async (req, res, next) => {
 
 // @DESC: Verify the user
 // @METHOD: [GET]      /api/v1/users/verify/:token
-// @ACCESS: private
+// @ACCESS: public
 const VerifyUser = AsyncHandler(async (req, res, next) => {
   const { token } = req.params;
 
@@ -137,18 +137,63 @@ const VerifyUser = AsyncHandler(async (req, res, next) => {
 });
 
 // @DESC: Reset password
-// @METHOD: [GET]      /api/v1/users/:token
-// @ACCESS: private
+// @METHOD: [PUT]      /api/v1/users/reset/:token
+// @ACCESS: public
 const resetPassword = AsyncHandler(async (req, res, next) => {
   const { token } = req.params;
   const { newPassword } = req.body;
+  if (!newPassword) {
+    throw new ApiError(400, "fill the field");
+  }
+  const hashedPassword = await hashPassword(newPassword);
+  const user = await prisma.user.update({
+    where: {
+      restPasswordToken: token,
+      restPasswordTokenExpire: {
+        gte: new Date(Date.now()),
+      },
+    },
+    data: {
+      password: hashedPassword,
+      restPasswordToken: null,
+      restPasswordTokenExpire: null,
+    },
+  });
+  if (!user) {
+    throw new ApiError(400, "user is not updated");
+  }
+  res.status(200).json(new ApiResponse(200, user, "password is reset"));
 });
 
 // @DESC: forgot password
-// @METHOD: [GET]      /api/v1/users/forget-password
-// @ACCESS: private
+// @METHOD: [PUT]      /api/v1/users/forget-password
+// @ACCESS: public
 const forgotPassword = AsyncHandler(async (req, res, next) => {
   const { email } = req.body;
+  if (!email) {
+    throw new ApiError(400, "fill the field");
+  }
+  const token = await generateRefreshToken();
+  const timer = new Date(Date.now() + 1 * 1000 * 60 * 15);
+  const messageId = await sendMailForForget(email, token);
+  if (!messageId) {
+    throw new ApiError(400, "something sending the mail");
+  }
+  const user = await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      restPasswordToken: token,
+      restPasswordTokenExpire: timer,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(400, "user is not found");
+  }
+
+  res.status(200).json(new ApiResponse(200, user, "Email is sended"));
 });
 
 export {

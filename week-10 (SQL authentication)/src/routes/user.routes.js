@@ -6,7 +6,7 @@ import {
   logout,
   VerifyUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
 } from "../controller/user.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 
@@ -17,5 +17,7 @@ router.route("/login").post(login);
 router.route("/logout").get(protect, logout);
 router.route("/me").get(protect, getProfile);
 router.route("/verify/:token").put(VerifyUser);
+router.route("/reset/:token").put(resetPassword);
+router.route("/forget-password").put(forgotPassword);
 
 export default router;
