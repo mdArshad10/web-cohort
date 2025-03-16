@@ -20,10 +20,18 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 
+// Routes
+import userRoutes from "./routes/user.routes.js";
+import { ApiResponse } from "./utils/apiResponse.js";
+
 app.get("/", (req, res, next) => {
   res.status(200).json({
     message: "API is running",
   });
+});
+app.use("/api/v1/users", userRoutes);
+app.use("*", (req, res, next) => {
+  res.status(200).json(new ApiResponse(404, "page not found"));
 });
 
 export { app };
