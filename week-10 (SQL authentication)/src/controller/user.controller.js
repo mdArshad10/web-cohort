@@ -72,7 +72,7 @@ const login = AsyncHandler(async (req, res, next) => {
     throw new ApiError(400, "invalid email or password");
   }
 
-  const token = generateToken(existingUser.id);
+  const token = generateToken(existingUser.id, existingUser.email);
   res
     .cookie("token", token, cookieOption)
     .json(new ApiResponse(200, existingUser, "user login successfully"));
@@ -81,15 +81,43 @@ const login = AsyncHandler(async (req, res, next) => {
 // @DESC: logout the user
 // @METHOD: [GET]      /api/v1/users/logout
 // @ACCESS: private
-const logout = AsyncHandler(async(req,res,next)=>{
-
-})
+const logout = AsyncHandler(async (req, res, next) => {
+  res
+    .cookie("token", "", {
+      maxAge: new Date(0),
+    })
+    .status(200)
+    .json(new ApiResponse(200, {}, "your are logout Successfully"));
+});
 
 // @DESC: get user detail
 // @METHOD: [GET]      /api/v1/users/me
 // @ACCESS: private
-const getProfile = AsyncHandler(async(req,res,next)=>{
+const getProfile = AsyncHandler(async (req, res, next) => {
+  const { id } = req.user;
 
-})
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
 
-export { register, login, logout, getProfile };
+  res.status(200).json(new ApiResponse(200, user, "get user"));
+});
+
+// @DESC: Reset password
+// @METHOD: [GET]      /api/v1/users/:token
+// @ACCESS: private
+const resetPassword = AsyncHandler(async (req, res, next) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+});
+
+// @DESC: forgot password
+// @METHOD: [GET]      /api/v1/users/forget-password
+// @ACCESS: private
+const forgotPassword = AsyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+});
+
+export { register, login, logout, getProfile, resetPassword, forgotPassword };

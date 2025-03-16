@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import { SECRET_TOKEN } from "../content.js";
 import crypto from "crypto";
 
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, SECRET_TOKEN, {
+const generateToken = (userId, email) => {
+  return jwt.sign({ id: userId, email }, SECRET_TOKEN, {
     expiresIn: "15d",
   });
 };
