@@ -2,14 +2,18 @@ import mongoose from 'mongoose'
 
 const projectSchema = new mongoose.Schema({
  name:{
-    type:String
+    type:String,
+    required:true,
+    unique:true,
+    trim:true
  },
  description:{
     type:String
  },
  createdBy:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"user"
+    ref:"user",
+    required:true
  }
 },{timestamps:true})
 

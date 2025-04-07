@@ -23,9 +23,11 @@ app.use(cookieParser());
 
 import healthRoutes from "./routes/health.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import { ErrorMiddleware } from "./middlewares/globalError.js";
 
 app.use("/api/v1", healthRoutes);
 app.use("/api/v1", userRoutes);
+app.use(ErrorMiddleware)
 app.use("*", (req, res, next) => {
   res.status(200).json(new ApiResponse(200, {}, "route is not found"));
 });

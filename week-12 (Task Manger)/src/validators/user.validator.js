@@ -28,3 +28,23 @@ export const registerUserValidator = ()=>{
 }
 
 
+export const loginUserValidator = () => {
+  return [
+    body("email")
+      .notEmpty()
+      .withMessage("email is required")
+      .trim()
+      .isEmail()
+      .withMessage("email is invalid")
+      .normalizeEmail(),
+    body("password")
+      .notEmpty()
+      .withMessage("password is required")
+      .trim()
+      .isStrongPassword()
+      .withMessage(
+        "password is must be either minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1",
+      ),
+  ];
+};
+

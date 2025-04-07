@@ -8,7 +8,7 @@ export const validator = (req, res, next) => {
     return next();
   }
   let errorMessage = [];
-  errors.array.map((err) =>
+  errors.array().map((err) =>
     errorMessage.push({
       [err.path]: err.msg,
     }),

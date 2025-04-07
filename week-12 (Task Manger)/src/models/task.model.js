@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const taskSchema = new mongoose.Schema(
   {
@@ -9,24 +9,34 @@ const taskSchema = new mongoose.Schema(
       type: String,
     },
     project: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref:"Project",
+      required:true
     },
     assignedTo: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref:"User",
+      required:true,
     },
     assignedBy: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref:"User",
+      required:true
     },
     status: {
       type: String,
       default: "pending",
       // Todo: it have the enum value
     },
-    attachments: [
+    attachments:
       {
-        type: String,
+        type: [{
+          url:String,
+          mimetype:String,
+          size:Number,
+        }],
+        default:[],
       },
-    ],
   },
   { timestamps: true },
 );
