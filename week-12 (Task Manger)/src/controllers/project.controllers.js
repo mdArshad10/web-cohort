@@ -33,4 +33,3 @@ const deleteMember = async (req, res) => {
 const updateMemberRole = async (req, res) => {
   // update member role
 };
-

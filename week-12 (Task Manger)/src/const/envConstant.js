@@ -5,6 +5,7 @@ config({
 
 export const PORT = process.env.PORT || 3000;
 export const BACKEND_URL = process.env.BACKEND_URL;
+export const BASIC_URL = process.env.BASIC_URL;
 export const MONGO_URL = process.env.MONGO_URL;
 export const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 

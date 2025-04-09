@@ -85,14 +85,10 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 userSchema.methods.generateEmailVerification = async function(){
-   const unHashToken =  await crypto.randomBytes(36).toString("hex");
-
-   const hashToken = await crypto.createHash("sha256")
-                                  .update(unHashToken)
-                                  .digest('hex');
+   const unHashToken =  await crypto.randomBytes(36).toString("hex")
   
    const expireToken = Date.now() + 1000 * 60* 20;
-   return {unHashToken, hashToken, expireToken} 
+   return {unHashToken, expireToken} 
 }
 
 
