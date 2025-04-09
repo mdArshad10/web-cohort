@@ -13,7 +13,7 @@ export const protect = async(req,res,next)=>{
       if(!decode){
         return next(new ApiError(400, "invalid token"))
       }
-      const user = await User.findById(decode.id);
+      const user = await User.findById(decode.id).select('-password');
       if(!user){
         return next(new ApiError(400, "user is not created"))
       }

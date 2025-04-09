@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 import { ACCESS_TOKEN, ACCESS_TOKEN_EXPIRE, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRE } from "../const/envConstant.js";
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -80,6 +82,17 @@ userSchema.methods.generateRefreshToken = function(){
   return jwt.sign({id:this._id}, REFRESH_TOKEN, {
     expiresIn:REFRESH_TOKEN_EXPIRE
   })
+}
+
+userSchema.methods.generateEmailVerification = async function(){
+   const unHashToken =  await crypto.randomBytes(36).toString("hex");
+
+   const hashToken = await crypto.createHash("sha256")
+                                  .update(unHashToken)
+                                  .digest('hex');
+  
+   const expireToken = Date.now() + 1000 * 60* 20;
+   return {unHashToken, hashToken, expireToken} 
 }
 
 
