@@ -1,4 +1,5 @@
 import mongoose, {Schema} from 'mongoose'
+import { AvailableUserRoles, UserRolesEnum } from "../const/constant.js";
 
 const projectMemberSchema = new Schema({
     user:{
@@ -6,7 +7,6 @@ const projectMemberSchema = new Schema({
         ref:"User",
         required:true
     },
-    
         project:{
             type: Schema.Types.ObjectId,
             ref:"Project",
@@ -14,8 +14,8 @@ const projectMemberSchema = new Schema({
         },
         role:{
             type:String,
-            enum:[],
-            default:""
+            enum:AvailableUserRoles,
+            default:UserRolesEnum.MEMBER
         }
     
 }, {

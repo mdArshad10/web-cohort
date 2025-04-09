@@ -18,31 +18,31 @@ import {protect} from '../middlewares/auth.js'
 const router = Router();
 
 router
-  .route("/users/register")
+  .route("/register")
   .post(registerUserValidator(), validator, registerUser);
 
 router
-  .route("/users/login")
+  .route("/login")
   .post(loginUserValidator(), validator, loginUser);
 
-router.route("/users/me").get(protect, getCurrentUser);
+router.route("/me").get(protect, getCurrentUser);
 
-router.route("/users/logout").post(protect, logoutUser);
+router.route("/logout").post(protect, logoutUser);
 
-router.route("/users/verify/:token").post(verifyEmail);
+router.route("/verify/:token").post(verifyEmail);
 
 // Todo: check the password
-router.route("/user/email/verify").post(resendEmailVerification);
+router.route("/email/verify").post(resendEmailVerification);
 
 // Todo: check the password input
-router.route("/users/password").patch(protect, changeCurrentPassword);
+router.route("/password").patch(protect, changeCurrentPassword);
 
 // Todo: check the email request
-router.route('/users/forgot').post(forgotPasswordRequest);
+router.route('/forgot').post(forgotPasswordRequest);
 
-router.route("/user/refreshToken").get(refreshAccessToken);
+router.route("/refreshToken").get(refreshAccessToken);
 
 // Todo: check the email request and token
-router.route('/users/forgot/:token').patch(resetForgottenPassword);
+router.route('/forgot/:token').patch(resetForgottenPassword);
 
 export default router;
