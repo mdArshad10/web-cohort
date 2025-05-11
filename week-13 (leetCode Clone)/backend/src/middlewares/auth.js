@@ -34,3 +34,23 @@ export const auth = async (req, res, next) => {
       .json(new ApiError(error.statusCodes, error.message, error));
   }
 };
+
+export const isAdmin = (role) => {
+  return async (req, res, next) => {
+    try {
+      const user = req.user;
+      if (role.include(user.role)) {
+        return next();
+      }
+    } catch (error) {
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json(
+          new ApiError(
+            StatusCodes.UNAUTHORIZED,
+            "your are not allowed for this route"
+          )
+        );
+    }
+  };
+};
