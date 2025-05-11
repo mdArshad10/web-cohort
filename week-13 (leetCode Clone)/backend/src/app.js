@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import healthCheckup from "./routes/health.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import problemRoutes from "./routes/problem.routes.js";
 import { ORIGIN } from "./lib/constants.js";
 
 const app = express();
@@ -27,5 +28,6 @@ app.use(cookieParser());
 // routes
 app.use("/api/v1", healthCheckup);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/problem", problemRoutes);
 
 export { app };
