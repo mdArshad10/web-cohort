@@ -29,7 +29,10 @@ const register = AsyncHandler(async (req, res, next) => {
       email,
       password: hashPassword,
       image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmVtYWxlJTIwcHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+        "https://i.pinimg.com/736x/97/3c/fc/973cfcca079333c9657855db38bdc79f.jpg",
+    },
+    omit: {
+      password: false,
     },
   });
   res
@@ -62,18 +65,32 @@ const login = AsyncHandler(async (req, res, next) => {
         new ApiError(StatusCodes.BAD_REQUEST, "email or password is invalid")
       );
   }
-  const token = jwt.sign({ id: existUser._id }, JWT_SECRET, {
+  const token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
     expiresIn: JWT_EXPIRE,
   });
+
+  const user = await db.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      image: true,
+      role: true,
+      createAt: true,
+      updatedAt: true,
+    },
+  });
+
   res
     .status(StatusCodes.OK)
     .cookie("token", token, {
       secure: NODE_ENV == "development" ? false : true,
       httpOnly: true,
-      sameSite:"strict",
+      sameSite: "strict",
       maxAge: new Date(Date.now() + 1000 * 60 * 60 * 15),
     })
-    .json(new ApiResponse(StatusCodes.ACCEPTED, existUser, "login the user"));
+    .json(new ApiResponse(StatusCodes.ACCEPTED, user, "login the user"));
 });
 
 // @Description: get the user detail
@@ -86,4 +103,16 @@ const getProfile = AsyncHandler(async (req, res, next) => {
     .json(new ApiResponse(StatusCodes.OK, user, "get user profile"));
 });
 
-export { register, login, getProfile };
+// @Description: logout the user
+// @Method: GET    api/v1/users/logout
+// @Access: private
+const logoutUser = AsyncHandler(async (req, res, next) => {
+  res
+    .status(StatusCodes.OK)
+    .cookie("token", "", {
+      expiresIn: new Date(0),
+    })
+    .json(new ApiResponse(StatusCodes.OK, {}, "user logout successfully"));
+});
+
+export { register, login, getProfile, logoutUser };

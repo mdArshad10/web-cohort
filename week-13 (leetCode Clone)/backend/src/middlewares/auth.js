@@ -15,10 +15,20 @@ export const auth = async (req, res, next) => {
     if (!decode) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, "token is unauthorized");
     }
+    console.log(decode);
 
     const user = await db.user.findUnique({
       where: {
         id: decode.id,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        image: true,
+        role: true,
+        createAt: true,
+        updatedAt: true,
       },
     });
     if (!user) {
