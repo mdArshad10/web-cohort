@@ -101,22 +101,52 @@ const createProblem = AsyncHandler(async (req, res, next) => {
 // @Description: get all problem
 // @Method: GET    api/v1/problems
 // @Access: public
-const getAllProblem = AsyncHandler(async (req, res, next) => {});
+const getAllProblem = AsyncHandler(async (req, res, next) => {
+  // add the filter also,
+  const limit = Number(req.query?.limit) ?? 10;
+  const page = Number(req.query?.page) ?? 1;
+  const skip = (page - 1) * limit;
+  const allProblem = await db.problem.findMany({
+    take: limit,
+    skip,
+  });
+
+  res
+    .status(StatusCodes.OK)
+    .json(new ApiResponse(StatusCodes.OK, allProblem, "get all Problem"));
+});
 
 // @Description: get a problem
 // @Method: GET    api/v1/users/problems/:id
 // @Access: public
-const getProblem = AsyncHandler(async (req, res, next) => {});
+const getProblem = AsyncHandler(async (req, res, next) => {
+    const {id} = req.params;
+    const problem = await db.problem.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    res.status(StatusCodes.OK).json(
+      new ApiResponse(StatusCodes.OK,problem, "get a particular problem")
+    )
+
+});
 
 // @Description: update
 // @Method: PATCH    api/v1/users/problems/:id
 // @Access: private
-const updateProblem = AsyncHandler(async (req, res, next) => {});
+const updateProblem = AsyncHandler(async (req, res, next) => {
+  const {id} = req.params;
+  
+});
 
 // @Description: delete
 // @Method: DELETE    api/v1/users/problems/:id
 // @Access: private
-const deleteProblem = AsyncHandler(async (req, res, next) => {});
+const deleteProblem = AsyncHandler(async (req, res, next) => {
+  const {id} = req.params;
+});
 
 // @Description: get the solved problem
 // @Method: get    api/v1/users/problems/solved
