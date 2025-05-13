@@ -18,9 +18,7 @@ const register = AsyncHandler(async (req, res, next) => {
     },
   });
   if (existUser) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json(new ApiError(StatusCodes.BAD_REQUEST, "user already exist"));
+    return next(new ApiError(StatusCodes.BAD_REQUEST, `user already exist`));
   }
   const hashPassword = await bcrypt.hash(password, 10);
   const newUser = await db.user.create({
@@ -51,19 +49,15 @@ const login = AsyncHandler(async (req, res, next) => {
     },
   });
   if (!existUser) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json(
-        new ApiError(StatusCodes.BAD_REQUEST, "email or password is invalid")
+      return next(
+        new ApiError(StatusCodes.BAD_REQUEST, `email or password is invalid`)
       );
   }
   const isComparePassword = await bcrypt.compare(password, existUser.password);
   if (!isComparePassword) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json(
-        new ApiError(StatusCodes.BAD_REQUEST, "email or password is invalid")
-      );
+    return next(
+      new ApiError(StatusCodes.BAD_REQUEST, `email or password is invalid`)
+    );
   }
   const token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
     expiresIn: JWT_EXPIRE,

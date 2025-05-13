@@ -25,22 +25,23 @@ const createProblem = AsyncHandler(async (req, res, next) => {
 
   // check the role also
   if (user.role !== "ADMIN") {
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json(new ApiError(StatusCodes.UNAUTHORIZED, "your are not allowed"));
+    return next(
+      new ApiError(
+        StatusCodes.UNAUTHORIZED,
+        `your are not allowed to perform this task`
+      )
+    );
   }
 
   for (const [language, solutionCode] of Object.entries(referenceSolution)) {
     const languageId = getLanguageIdByJudge0(language);
     if (!languageId) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json(
-          new ApiError(
-            StatusCodes.BAD_REQUEST,
-            `language ${language} is not supported`
-          )
-        );
+      return next(
+        new ApiError(
+          StatusCodes.BAD_REQUEST,
+          `language ${language} is not supported`
+        )
+      );
     }
 
     const submission = testCases.map(({ input, output }) => ({
@@ -59,14 +60,12 @@ const createProblem = AsyncHandler(async (req, res, next) => {
     for (let index = 0; index < results.length; index++) {
       const result = results[index];
       if (!result.status.id !== 3) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json(
-            new ApiError(
-              StatusCodes.BAD_REQUEST,
-              `Testcase ${index + 1} failed for language ${language}`
-            )
-          );
+        return next(
+          new ApiError(
+            StatusCodes.BAD_REQUEST,
+            `Testcase ${index + 1} failed for language ${language}`
+          )
+        );
       }
     }
 
@@ -120,32 +119,48 @@ const getAllProblem = AsyncHandler(async (req, res, next) => {
 // @Method: GET    api/v1/users/problems/:id
 // @Access: public
 const getProblem = AsyncHandler(async (req, res, next) => {
-    const {id} = req.params;
-    const problem = await db.problem.findUnique({
-      where: {
-        id,
-      },
-    });
+  const { id } = req.params;
+  const problem = await db.problem.findUnique({
+    where: {
+      id,
+    },
+  });
 
-    res.status(StatusCodes.OK).json(
-      new ApiResponse(StatusCodes.OK,problem, "get a particular problem")
-    )
-
+  res
+    .status(StatusCodes.OK)
+    .json(new ApiResponse(StatusCodes.OK, problem, "get a particular problem"));
 });
 
 // @Description: update
 // @Method: PATCH    api/v1/users/problems/:id
 // @Access: private
 const updateProblem = AsyncHandler(async (req, res, next) => {
-  const {id} = req.params;
-  
+  const { id } = req.params;
 });
 
 // @Description: delete
 // @Method: DELETE    api/v1/users/problems/:id
 // @Access: private
 const deleteProblem = AsyncHandler(async (req, res, next) => {
-  const {id} = req.params;
+  const { id } = req.params;
+  const problem = await db.problem.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!problem) {
+    return next(new ApiError(StatusCodes.BAD_REQUEST, "problem is not exist"));
+  }
+  await db.problem.delete({
+    where: {
+      id,
+    },
+  });
+  res
+    .status(StatusCodes.OK)
+    .json(
+      new ApiResponse(StatusCodes.OK, {}, "delete the problem successfully")
+    );
 });
 
 // @Description: get the solved problem
