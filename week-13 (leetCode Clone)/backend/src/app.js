@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import healthCheckup from "./routes/health.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
+import executeCodeRoutes from "./routes/executeCode.routes.js";
 import { ORIGIN } from "./lib/constants.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { StatusCodes } from "http-status-codes";
@@ -31,8 +32,8 @@ app.use(cookieParser());
 app.use("/api/v1", healthCheckup);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/problem", problemRoutes);
+app.use("/api/v1/execute-code", executeCodeRoutes);
 
 app.use(errorMiddleware);
-
 
 export { app };
